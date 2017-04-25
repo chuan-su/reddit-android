@@ -12,10 +12,13 @@ import se.chuan.redditandroid.model.RedditPost;
  * Created by suchuan on 2017-04-25.
  */
 
-public class DataFetchAsyncTask extends AsyncTask<Void,Void,ArrayList<RedditPost>> {
+public class DataFetchAsyncTask extends AsyncTask<String,Integer,ArrayList<RedditPost>> {
 
     @Override
-    protected ArrayList<RedditPost> doInBackground(Void... params) {
-        return new DataFetcher().fetchPostItems();
+    protected ArrayList<RedditPost> doInBackground(String... params) {
+        if(params.length > 0)
+            return new DataFetcher(params[0]).fetchPostItems();
+        else
+            return new DataFetcher().fetchPostItems();
     }
 }

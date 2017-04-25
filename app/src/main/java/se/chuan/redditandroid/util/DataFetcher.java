@@ -1,5 +1,7 @@
 package se.chuan.redditandroid.util;
 
+import android.net.Uri;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +23,19 @@ import se.chuan.redditandroid.model.RedditPost;
 public class DataFetcher{
     public static final String ENDPOINT = "https://www.reddit.com/r/gaming/top.json";
 
+    String urlString;
+
+    public DataFetcher(){
+        this.urlString = Uri.parse(ENDPOINT).toString();
+    }
+    public DataFetcher(String after){
+        this.urlString = Uri.parse(ENDPOINT)
+                .buildUpon()
+                .appendQueryParameter("after",after)
+                .build()
+                .toString();
+    }
+
     public ArrayList<RedditPost> fetchPostItems() {
         ArrayList<RedditPost> items = new ArrayList<>();
         try {
@@ -37,7 +52,6 @@ public class DataFetcher{
                 redditPost.setSubReddit(postJsonObj.getString("subreddit"));
                 redditPost.setScore(postJsonObj.getInt("score"));
                 redditPost.setUrl(postJsonObj.getString("url"));
-
                 items.add(redditPost);
             }
         }
@@ -47,13 +61,16 @@ public class DataFetcher{
         return items;
     }
 
-    public byte[] fetchPostData() throws IOException {
-        URL url = new URL(ENDPOINT);
+    private byte[] fetchPostData() throws IOException {
 
+        URL url = new URL(urlString);
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            if (urlConnection .getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new IOException(urlConnection.getResponseMessage());
+            }
             byte[] buffer = new byte[1024];
             int length;
             while((length = in.read(buffer)) > 0){
