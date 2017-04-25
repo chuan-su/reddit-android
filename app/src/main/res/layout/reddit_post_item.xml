@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/post_item_scoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="4.5"/>
+
+    <TextView
+        android:id="@+id/post_item_titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/post_item_scoreTextView"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="Post title"
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/post_item_subRedditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/post_item_titleTextView"
+        android:layout_toLeftOf="@id/post_item_scoreTextView"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:text="Post subreddit" />
+
+</RelativeLayout>

@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,32 +37,32 @@ public class DataFetcher{
                 .toString();
     }
 
-    public ArrayList<RedditPost> fetchPostItems() {
+    public DataFetchTaskResult<ArrayList<RedditPost>> fetchPostItems() {
         ArrayList<RedditPost> items = new ArrayList<>();
         try {
-            String responseText = new String(fetchPostData());
+            String responseText = new String(fetchData());
             JSONObject responseBody = new JSONObject(responseText);
             JSONArray postsJsonArray = responseBody.getJSONObject("data").getJSONArray("children");
 
             for(int i = 0; i< postsJsonArray.length();i++){
                 JSONObject postJsonObj = postsJsonArray.getJSONObject(i).getJSONObject("data");
-
                 RedditPost redditPost = new RedditPost();
 
                 redditPost.setName(postJsonObj.getString("name"));
                 redditPost.setSubReddit(postJsonObj.getString("subreddit"));
                 redditPost.setScore(postJsonObj.getInt("score"));
                 redditPost.setUrl(postJsonObj.getString("url"));
+
                 items.add(redditPost);
             }
+            return new DataFetchTaskResult<>(items);
         }
         catch (IOException | JSONException e){
-            e.printStackTrace();
+            return new DataFetchTaskResult<>(e);
         }
-        return items;
     }
 
-    private byte[] fetchPostData() throws IOException {
+    private byte[] fetchData() throws IOException {
 
         URL url = new URL(urlString);
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
